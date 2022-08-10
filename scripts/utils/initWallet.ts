@@ -9,7 +9,7 @@ async function initWallet(key : string | undefined) {
       : new ethers.Wallet(key ?? EXPOSED_KEY);
 
   console.log(`Using address ${wallet.address}`);
-  const provider = ethers.providers.getDefaultProvider("ropsten");
+  const provider = ethers.providers.getDefaultProvider("kovan");
   const signer = wallet.connect(provider);
   const balanceBN = await signer.getBalance();
   const balance = Number(ethers.utils.formatEther(balanceBN));

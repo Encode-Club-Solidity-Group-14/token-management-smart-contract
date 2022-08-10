@@ -53,7 +53,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         _initialized = true;
     }
 
-    function init(address owner_, string memory name_, string memory symbol_, uint8 decimals_, uint256 totalSupply_) public override {
+    function init(address owner_, string memory name_, string memory symbol_, uint8 decimals_, uint256 totalSupply_) virtual public override {
         require(_initialized == false, "Contract already initialized");
         _name = name_;
         _symbol = symbol_;

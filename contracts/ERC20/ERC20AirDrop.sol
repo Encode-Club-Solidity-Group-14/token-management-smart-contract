@@ -2,7 +2,8 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
-import "./ERC20.sol";
+import "./IERC20AirDrop.sol";
+import "./ERC20Ownable.sol";
 
 /**
  * TODO: describe here this contract 
@@ -10,15 +11,14 @@ import "./ERC20.sol";
  * tokens and those that they have an allowance for, in a way that can be
  * recognized off-chain (via event analysis).
  */
-contract ERC20AirDrop is ERC20 {
+contract ERC20AirDrop is IERC20AirDrop, ERC20Ownable  {
 
     bytes32 public _root;
     uint256 public _rewardAmount;
     mapping(address => bool) _claimed;
 
     /// TODO: add explanation here...
-    function init(address owner_, string memory name_, string memory symbol_, uint8 decimals_, uint256 totalSupply_, bytes32 root_, uint256 rewardAmount_) external {
-        super.init(owner_, name_, symbol_, decimals_, totalSupply_);
+    function airDropTokens(bytes32 root_, uint256 rewardAmount_) public onlyOwner {
         _root = root_;
         _rewardAmount = rewardAmount_;
     }
@@ -33,6 +33,35 @@ contract ERC20AirDrop is ERC20 {
             "Incorrect merkle proof"
         );
         _mint(msg.sender, _rewardAmount);
+    }
+
+    /// TODO: add explanation here...
+    function mint(address to, uint256 amount) public onlyOwner {
+        _mint(to, amount);
+    }
+     /**
+     * @dev Destroys `amount` tokens from the caller.
+     *
+     * See {ERC20-_burn}.
+     */
+    function burn(uint256 amount) public virtual {
+        _burn(_msgSender(), amount);
+    }
+
+    /**
+     * @dev Destroys `amount` tokens from `account`, deducting from the caller's
+     * allowance.
+     *
+     * See {ERC20-_burn} and {ERC20-allowance}.
+     *
+     * Requirements:
+     *
+     * - the caller must have allowance for ``accounts``'s tokens of at least
+     * `amount`.
+     */
+    function burnFrom(address account, uint256 amount) public virtual {
+        _spendAllowance(account, _msgSender(), amount);
+        _burn(account, amount);
     }
 
 }

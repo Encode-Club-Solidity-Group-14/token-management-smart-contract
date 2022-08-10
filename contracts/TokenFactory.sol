@@ -39,22 +39,6 @@ contract TokenFactory is Ownable {
         emit TokenCreated(clone);
     }
 
-    /// @notice Creates and initializes the ERC20 AirDrop MinimalProxy contract
-    /// @param libraryAddress_ is an address of implementation, to which the MinimalProxy should point to
-    /// @param name_ is the ERC20 token name
-    /// @param symbol_ is the ERC20 token symbol
-    /// @param totalSupply_ is the ERC20 token totalSupply that will be minted to msg.sender
-    /// @param root_ is the root of the MerkleTree of address that are eligible to claim token
-    /// @param rewardAmount_ is the amount of tokens that users are able to claim  
-    function createERC20AirDrop(address libraryAddress_, string memory name_, string memory symbol_, uint8 decimals_, uint256 totalSupply_, bytes32 root_, uint256 rewardAmount_) payable external {
-        // The service fee should be paid when calling this function
-        //TODO: change here to charge an amount for the service 
-        //require(msg.value >= serviceFee, "Service Fee wasn't paid");
-        address clone = createClone(libraryAddress_);
-        IERC20AirDrop(clone).init(msg.sender, name_, symbol_, decimals_, totalSupply_, root_, rewardAmount_);
-        emit TokenCreated(clone);
-    }
-
     /// @notice Creates a MinimalProxy contract via EIP1167 assembly code
     /// @dev Using this implementation: https://github.com/optionality/clone-factory
     /// @param target is an address of implementation, to which the MinimalProxy will point to
